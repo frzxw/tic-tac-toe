@@ -108,9 +108,10 @@ export default function TicTacToe() {
   }
 
   const makeAIMove = (board: Player[][]) => {
-    const [row, col] = findBestMove(board)
+    const aiMarker = gameState.selectedMarker === '✕' ? '◯' : '✕'
+    const [row, col] = findBestMove(board, aiMarker)
     const newBoard = board.map(r => [...r])
-    newBoard[row][col] = gameState.selectedMarker === '✕' ? '◯' : '✕'
+    newBoard[row][col] = aiMarker
 
     const [winner, winningCells] = checkWinner(newBoard)
 
@@ -245,15 +246,15 @@ function checkWinner(board: Player[][]): [Player | 'draw' | null, [number, numbe
   return [null, null];
 }
 
-function findBestMove(board: Player[][]): [number, number] {
+function findBestMove(board: Player[][], aiMarker: Player): [number, number] {
   let bestScore = -Infinity;
   let bestMove: [number, number] = [-1, -1];
 
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 3; col++) {
       if (board[row][col] === null) {
-        board[row][col] = '◯';
-        const score = minimax(board, 0, false);
+        board[row][col] = aiMarker;
+        const score = minimax(board, 0, false, aiMarker);
         board[row][col] = null;
         if (score > bestScore) {
           bestScore = score;
@@ -266,10 +267,11 @@ function findBestMove(board: Player[][]): [number, number] {
   return bestMove;
 }
 
-function minimax(board: Player[][], depth: number, isMaximizing: boolean): number {
+function minimax(board: Player[][], depth: number, isMaximizing: boolean, aiMarker: Player): number {
+  const humanMarker = aiMarker === '✕' ? '◯' : '✕';
   const [winner] = checkWinner(board);
-  if (winner === '◯') return 1;
-  if (winner === '✕') return -1;
+  if (winner === aiMarker) return 10 - depth;
+  if (winner === humanMarker) return depth - 10;
   if (winner === 'draw') return 0;
 
   if (isMaximizing) {
@@ -277,8 +279,8 @@ function minimax(board: Player[][], depth: number, isMaximizing: boolean): numbe
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         if (board[row][col] === null) {
-          board[row][col] = '◯';
-          const score = minimax(board, depth + 1, false);
+          board[row][col] = aiMarker;
+          const score = minimax(board, depth + 1, false, aiMarker);
           board[row][col] = null;
           bestScore = Math.max(score, bestScore);
         }
@@ -290,8 +292,8 @@ function minimax(board: Player[][], depth: number, isMaximizing: boolean): numbe
     for (let row = 0; row < 3; row++) {
       for (let col = 0; col < 3; col++) {
         if (board[row][col] === null) {
-          board[row][col] = '✕';
-          const score = minimax(board, depth + 1, true);
+          board[row][col] = humanMarker;
+          const score = minimax(board, depth + 1, true, aiMarker);
           board[row][col] = null;
           bestScore = Math.min(score, bestScore);
         }
