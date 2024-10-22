@@ -30,7 +30,7 @@ function WelcomeUI({ onStart, toggleDarkMode, isDarkMode }: { onStart: (marker: 
   const [gameMode, setGameMode] = useState<GameMode | null>(null)
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md transition-all duration-300">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md transition-all duration-300 fade-in">
       <h1 className="text-4xl font-extrabold mb-8 tracking-wide text-center text-primary font-poppins">
         Tic Tac Toe
       </h1>
@@ -96,6 +96,7 @@ const ToggleButton = ({ onClick, isActive, label }: { onClick: () => void, isAct
 export default function TicTacToe() {
   const [gameState, setGameState] = useState<GameState>(initialState)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [shake, setShake] = useState(false)
 
   const handleStart = (marker: Player, mode: GameMode) => {
     setGameState({
@@ -142,6 +143,11 @@ export default function TicTacToe() {
     if (nextPlayer === '◯' && !winner && gameState.gameMode === 'vsCPU') {
       setTimeout(() => makeAIMove(newBoard), 500)
     }
+
+    if (nextPlayer === '✕' && !winner) {
+      setShake(true)
+      setTimeout(() => setShake(false), 500)
+    }
   }, [gameState, makeAIMove])
 
   const resetGame = () => {
@@ -158,7 +164,7 @@ export default function TicTacToe() {
         {!gameState.gameMode ? (
           <WelcomeUI onStart={handleStart} toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
         ) : (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md transition-all duration-300">
+          <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md transition-all duration-300 ${shake ? 'shake' : ''}`}>
             <h1 className="text-4xl font-bold mb-8 text-primary text-center font-poppins">Tic Tac Toe</h1>
             <div className="flex justify-center mb-8">
               <div className="grid grid-cols-3 gap-2 sm:gap-4">
@@ -190,7 +196,7 @@ export default function TicTacToe() {
             <div className="flex flex-col space-y-4">
               <Button 
                 onClick={resetGame} 
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/80 font-bold py-2 px-4 rounded-lg font-lato"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/80 font-bold py-2 px-4 rounded-lg font-lato transform hover:scale-105 transition-transform duration-200"
               >
                 Reset Game
               </Button>
@@ -212,6 +218,7 @@ export default function TicTacToe() {
 }
 
 // AI logic using minimax algorithm
+
 function checkWinner(board: Player[][]): [Player | 'draw' | null, [number, number][] | null] {
   const lines: [number, number][][] = [
     [[0, 0], [0, 1], [0, 2]],
