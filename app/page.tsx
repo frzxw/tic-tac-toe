@@ -124,7 +124,7 @@ function findBestMove(board: Player[][]): [number, number] {
     for (let col = 0; col < 3; col++) {
       if (board[row][col] === null) {
         board[row][col] = 'O'
-        let score = minimax(board, 0, false)
+        const score = minimax(board, 0, false)
         board[row][col] = null
         if (score > bestScore) {
           bestScore = score
@@ -149,7 +149,7 @@ function minimax(board: Player[][], depth: number, isMaximizing: boolean): numbe
       for (let col = 0; col < 3; col++) {
         if (board[row][col] === null) {
           board[row][col] = 'O'
-          let score = minimax(board, depth + 1, false)
+          const score = minimax(board, depth + 1, false)
           board[row][col] = null
           bestScore = Math.max(score, bestScore)
         }
@@ -162,7 +162,7 @@ function minimax(board: Player[][], depth: number, isMaximizing: boolean): numbe
       for (let col = 0; col < 3; col++) {
         if (board[row][col] === null) {
           board[row][col] = 'X'
-          let score = minimax(board, depth + 1, true)
+          const score = minimax(board, depth + 1, true)
           board[row][col] = null
           bestScore = Math.min(score, bestScore)
         }
