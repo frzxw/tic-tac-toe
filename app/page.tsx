@@ -59,14 +59,14 @@ export default function TicTacToe() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <h1 className="text-4xl font-bold mb-8 text-gray-800">Tic Tac Toe</h1>
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-8">
         {gameState.board.map((row, rowIndex) =>
           row.map((cell, colIndex) => (
             <Button
               key={`${rowIndex}-${colIndex}`}
-              className={`w-24 h-24 text-4xl font-bold ${
+              className={`w-16 h-16 sm:w-24 sm:h-24 text-2xl sm:text-4xl font-bold ${
               cell ? 'bg-black hover:bg-gray-800 text-white' : 'bg-white hover:bg-gray-100'
               }`}
               onClick={() => handleCellClick(rowIndex, colIndex)}
