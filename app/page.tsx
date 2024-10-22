@@ -260,7 +260,7 @@ function findBestMove(board: Player[][]): [number, number] {
 }
 
 function minimax(board: Player[][], depth: number, isMaximizing: boolean): number {
-  const [winner, _] = checkWinner(board);
+  const [winner] = checkWinner(board);
   if (winner === '◯') return 1;
   if (winner === '✕') return -1;
   if (winner === 'draw') return 0;
