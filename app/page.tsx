@@ -106,6 +106,22 @@ export default function TicTacToe() {
     })
   }
 
+  const makeAIMove = (board: Player[][]) => {
+    const [row, col] = findBestMove(board)
+    const newBoard = board.map(r => [...r])
+    newBoard[row][col] = '◯'
+
+    const [winner, winningCells] = checkWinner(newBoard)
+
+    setGameState({
+      ...gameState,
+      board: newBoard,
+      currentPlayer: '✕',
+      winner: winner,
+      winningCells: winningCells,
+    })
+  }
+
   const handleCellClick = useCallback((row: number, col: number) => {
     if (gameState.board[row][col] || gameState.winner) return
 
@@ -126,23 +142,7 @@ export default function TicTacToe() {
     if (nextPlayer === '◯' && !winner && gameState.gameMode === 'vsCPU') {
       setTimeout(() => makeAIMove(newBoard), 500)
     }
-  }, [gameState])
-
-  const makeAIMove = (board: Player[][]) => {
-    const [row, col] = findBestMove(board)
-    const newBoard = board.map(r => [...r])
-    newBoard[row][col] = '◯'
-
-    const [winner, winningCells] = checkWinner(newBoard)
-
-    setGameState({
-      ...gameState,
-      board: newBoard,
-      currentPlayer: '✕',
-      winner: winner,
-      winningCells: winningCells,
-    })
-  }
+  }, [gameState, makeAIMove])
 
   const resetGame = () => {
     setGameState(initialState)
@@ -224,7 +224,7 @@ function checkWinner(board: Player[][]): [Player | 'draw' | null, [number, numbe
     [[0, 2], [1, 1], [2, 0]]
   ];
 
-  for (let line of lines) {
+  for (const line of lines) {
     const [[a, b], [c, d], [e, f]] = line;
     if (board[a][b] && board[a][b] === board[c][d] && board[a][b] === board[e][f]) {
       return [board[a][b], line];
