@@ -154,47 +154,46 @@ export default function TicTacToe() {
   const resetGame = () => {
     setGameState(initialState)
   }
-
+  
   const toggleDarkMode = () => {
     setIsDarkMode(!isDarkMode)
   }
-
+  
   return (
     <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <div className="flex-grow flex items-center justify-center p-4">
         {!gameState.gameMode ? (
           <WelcomeUI onStart={handleStart} toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
         ) : (
-          <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md transition-all duration-300 ${shake ? 'shake' : ''}`}>
-            <h1 className="text-4xl font-bold mb-8 text-primary text-center font-poppins">Tic Tac Toe</h1>
-            <div className="flex justify-center mb-8">
-              <div className="grid grid-cols-3 gap-2 sm:gap-4">
-                {gameState.board.map((row, rowIndex) =>
-                  row.map((cell, colIndex) => (
-                    <Button
-                      key={`${rowIndex}-${colIndex}`}
-                      className={`w-16 h-16 sm:w-24 sm:h-24 text-2xl sm:text-4xl font-bold font-lato
+          <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md transition-all duration-300 ${shake ? 'shake' : ''}`}>
+            <div className="flex flex-col space-y-4">
+              <div className="flex justify-center mb-8">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 w-full">
+                  {gameState.board.map((row, rowIndex) =>
+                    row.map((cell, colIndex) => (
+                      <Button
+                        key={`${rowIndex}-${colIndex}`}
+                        className={`w-full aspect-square text-3xl sm:text-4xl font-bold font-lato
                         ${cell ? 'bg-primary text-primary-foreground hover:bg-primary/80' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}
                         ${gameState.winningCells?.some(([r, c]) => r === rowIndex && c === colIndex) ? 'bg-green-500 hover:bg-green-600' : ''}
-                      `}
-                      onClick={() => handleCellClick(rowIndex, colIndex)}
-                    >
-                      {cell}
-                    </Button>
-                  ))
-                )}
+                        `}
+                        onClick={() => handleCellClick(rowIndex, colIndex)}
+                      >
+                        {cell}
+                      </Button>
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-            {gameState.winner ? (
-              <div className="text-2xl font-bold mb-4 text-primary text-center font-poppins">
-                {gameState.winner === 'draw' ? "It's a draw!" : `${gameState.winner} wins!`}
-              </div>
-            ) : (
-              <div className="text-2xl font-bold mb-4 text-primary text-center font-poppins">
-                {`It's ${gameState.currentPlayer} turn`}
-              </div>
-            )}
-            <div className="flex flex-col space-y-4">
+              {gameState.winner ? (
+                <div className="text-2xl font-bold mb-4 text-primary text-center font-poppins">
+                  {gameState.winner === 'draw' ? "It's a draw!" : `${gameState.winner} wins!`}
+                </div>
+              ) : (
+                <div className="text-2xl font-bold mb-4 text-primary text-center font-poppins">
+                  {`It's ${gameState.currentPlayer} turn`}
+                </div>
+              )}
               <Button 
                 onClick={resetGame} 
                 className="w-full bg-primary text-primary-foreground hover:bg-primary/80 font-bold py-2 px-4 rounded-lg font-lato transform hover:scale-105 transition-transform duration-200"
