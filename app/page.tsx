@@ -110,14 +110,14 @@ export default function TicTacToe() {
   const makeAIMove = (board: Player[][]) => {
     const [row, col] = findBestMove(board)
     const newBoard = board.map(r => [...r])
-    newBoard[row][col] = '◯'
+    newBoard[row][col] = gameState.selectedMarker === '✕' ? '◯' : '✕'
 
     const [winner, winningCells] = checkWinner(newBoard)
 
     setGameState({
       ...gameState,
       board: newBoard,
-      currentPlayer: '✕',
+      currentPlayer: gameState.selectedMarker,
       winner: winner,
       winningCells: winningCells,
     })
@@ -140,11 +140,11 @@ export default function TicTacToe() {
       winningCells: winningCells,
     })
 
-    if (nextPlayer === '◯' && !winner && gameState.gameMode === 'vsCPU') {
+    if (nextPlayer === (gameState.selectedMarker === '✕' ? '◯' : '✕') && !winner && gameState.gameMode === 'vsCPU') {
       setTimeout(() => makeAIMove(newBoard), 500)
     }
 
-    if (nextPlayer === '✕' && !winner) {
+    if (nextPlayer === gameState.selectedMarker && !winner) {
       setShake(true)
       setTimeout(() => setShake(false), 500)
     }
